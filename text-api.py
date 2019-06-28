@@ -88,6 +88,7 @@ if __name__ == "__main__":
     print (mimetype)
 
     r = tika(files)
+    
     print("Tika Took %s seconds ---" % (sttime - fttime))
     
     #Determine if PDF needs OCRing
@@ -95,7 +96,9 @@ if __name__ == "__main__":
         fin.seek(0) # Move to the beginning of document
         r = xtika(files)
         print("Tika OCR Took %s seconds ---" % (sttime - fttime))
-   
+    #print(r.text)
+    if len(r.text.strip())==0 or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'):
+        quit()
     t = nlpbuddy(r.text)
     print("Text Summarization Took %s seconds ---" % (snltime - fnltime))
    
@@ -103,7 +106,7 @@ if __name__ == "__main__":
     b = klassify(a['summary'])
     c = b.json()
     print("Classification Took %s seconds ---" % (sktime - fktime))
-    print("This file belongs to Schedule: " + str(c['label']) )
+    print("Suggested Records Schedule: " + str(c['label']) )
     
     #pisplay top 3 categories
     from collections import Counter
