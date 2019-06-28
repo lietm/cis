@@ -120,18 +120,4 @@ if __name__ == "__main__":
     
     #print summary
     print("Here's the summary: ")
-    print(t1['summary'][:400])
-      
-    
-    #TODO Determine MIME Type to handle different file types, Parse Json
-
-    '''
-    sttime = "global"
-    fttime = "global"
-    sotime = "global"
-    fotime = "global"
-    snltime = "global"
-    fnltime = "global"
-    sktime = "global"
-    fktime = "global"
-    '''
+    print(a['summary'][:400])
