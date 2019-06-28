@@ -124,3 +124,7 @@ if __name__ == "__main__":
     #print summary
     print("Here's the summary: ")
     print(a['summary'][:400])
+
+    #print keywords
+    print("Here are keywords: ")
+    print(a['keywords'][:400])
