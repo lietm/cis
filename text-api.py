@@ -1,5 +1,6 @@
 import requests
 import time
+import mimetypes
 
 sttime = "global"
 fttime = "global"
@@ -80,10 +81,12 @@ if __name__ == "__main__":
     files = {'files':fin}
 
     print ('Parsing File: ')
-    m = mime(files)
-    print (m.text)
-    mimetype = m.text
-    fin.seek(0)
+    #m = mime(files)
+    #print (m.text)
+    #fin.seek(0)
+    mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
+    print (mimetype)
+
     r = tika(files)
     print("Tika Took %s seconds ---" % (sttime - fttime))
     
