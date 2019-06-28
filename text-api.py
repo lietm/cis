@@ -95,20 +95,33 @@ if __name__ == "__main__":
         fin.seek(0) # Move to the beginning of document
         r = xtika(files)
         print("Tika OCR Took %s seconds ---" % (sttime - fttime))
-
-
-    #Need to parse JSON and Display only highest 3 results
-    
+   
     t = nlpbuddy(r.text)
     print("Text Summarization Took %s seconds ---" % (snltime - fnltime))
-    t1 = t.json()
-    
+   
     a = t.json()    
     b = klassify(a['summary'])
+    c = b.json()
     print("Classification Took %s seconds ---" % (sktime - fktime))
-
-    #print("Summary: %t" % t1['summary'][:400])
-    print(b.text)
+    print("This file belongs to Schedule: " + str(c['label']) )
+    
+    #pisplay top 3 categories
+    from collections import Counter
+    d = Counter(c['scores'])
+    print('Recommended Top 3 Labels')
+    for k,v in d.most_common(3):
+        print('%s: Score %i' % (k,v))
+    
+    size = fin.seek(0,2)
+    fin.close()
+    
+    #print total processing time, and size of document
+    print('Total Time Took to Process this Document of %s bit: %i Seconds' % (size, sttime - fktime))
+    
+    #print summary
+    print("Here's the summary: ")
+    print(t1['summary'][:400])
+      
     
     #TODO Determine MIME Type to handle different file types, Parse Json
 
