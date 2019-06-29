@@ -71,7 +71,7 @@ if __name__ == "__main__":
    
     files = {'files':fin}
 
-    print ('Parsing File: ')
+    print ('Parsing File: '+root.filename)
 
     mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
     #print (mimetype)
