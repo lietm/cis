@@ -16,7 +16,6 @@ mimetype = ""
 def tika(files):
     global sttime
     global fttime
-    sttime = time.time()
     url = 'https://ecms-cis-tika.edap-cluster.com/tika/form'
     headers = {'Cache-Control': 'no-cache'}
     sttime = time.time()
