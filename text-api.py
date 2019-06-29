@@ -13,20 +13,14 @@ fktime = "global"
 
 mimetype = ""
 
-def mime(files):
-    url = 'https://ecms-cis-tika.edap-cluster.com/detect/stream'
-    headers = {'Cache-Control': 'no-cache'}
-    m = requests.put(url, files=files, headers = headers)
-    return m
-
 def tika(files):
     global sttime
     global fttime
     sttime = time.time()
-    url = 'https://ecms-cis-tika.edap-cluster.com/tika'
-    headers = {'Content-Type' : mimetype,'Cache-Control': 'no-cache'}
+    url = 'https://ecms-cis-tika.edap-cluster.com/tika/form'
+    headers = {'Cache-Control': 'no-cache'}
     sttime = time.time()
-    r = requests.put(url, files=files, headers = headers)
+    r = requests.post(url, files=files, headers = headers)
     fttime = time.time()
     return r
 
@@ -40,7 +34,6 @@ def xtika(files):
     fotime = time.time()
     return r
 
-    
 def nlpbuddy(text):
     global snltime
     global fnltime
@@ -76,20 +69,15 @@ if __name__ == "__main__":
 
     fin = open(root.filename, 'rb')
    
-    
-    #fin = open(r'C:\Users\mnguyen\Desktop\nocr.pdf', 'rb')
     files = {'files':fin}
 
     print ('Parsing File: ')
-    #m = mime(files)
-    #print (m.text)
-    #fin.seek(0)
-    mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
-    print (mimetype)
 
+    mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
+    #print (mimetype)
     r = tika(files)
     #print (r.content)
-    print(r.status_code)
+    #print(r.status_code) API STATUS
     print("Tika Took %s seconds ---" % (sttime - fttime))
     
     #Determine if PDF needs OCRing
@@ -99,7 +87,8 @@ if __name__ == "__main__":
         print("Tika OCR Took %s seconds ---" % (sttime - fttime))
     #print(r.text)
     
-    if len(r.text.strip())==0 or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'):
+    # or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    if len(r.text.strip())==0:
         quit()
     t = nlpbuddy(r.text)
     print("Text Summarization Took %s seconds ---" % (snltime - fnltime))
