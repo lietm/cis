@@ -96,7 +96,7 @@ if __name__ == "__main__":
     a = t.json()    
     b = klassify(a['summary'])
     c = b.json()
-    print("--- Classification Took %s seconds ---" % abs(round(sktime - fktime,2)))
+    print("--- ML Text Classification Took %s seconds ---" % abs(round(sktime - fktime,2)))
     print("Suggested Records Schedule: " + str(c['label']) )
     
     #pisplay top 3 categories
