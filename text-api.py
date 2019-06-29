@@ -83,7 +83,7 @@ if __name__ == "__main__":
         fin.seek(0) # Move to the beginning of document
         r = xtika(files)
         print("--- Text Extraction with OCR Took %s seconds ---" % abs(round(sttime - fttime,2)))
-        else:
+    else:
         print("--- Text Extraction Took %s seconds ---" % abs(round(sttime - fttime,2)))
     #print(r.text)
     
