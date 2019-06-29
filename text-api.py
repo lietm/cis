@@ -78,25 +78,25 @@ if __name__ == "__main__":
     r = tika(files)
     #print (r.content)
     #print(r.status_code) API STATUS
-    print("Tika Took %s seconds ---" % (sttime - fttime))
+    print("--- Text Extraction Took %s seconds ---" % abs(round(sttime - fttime,2)))
     
     #Determine if PDF needs OCRing
     if len(r.text.strip())==0 and (mimetype == 'application/pdf'):
         fin.seek(0) # Move to the beginning of document
         r = xtika(files)
-        print("Tika OCR Took %s seconds ---" % (sttime - fttime))
+        print("--- Text Extraction with OCR Took %s seconds ---" % abs(round(sttime - fttime,2)))
     #print(r.text)
     
     # or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     if len(r.text.strip())==0:
         quit()
     t = nlpbuddy(r.text)
-    print("Text Summarization Took %s seconds ---" % (snltime - fnltime))
+    print("--- Text Summarization Took %s seconds ---" % abs(round(snltime - fnltime,2)))
    
     a = t.json()    
     b = klassify(a['summary'])
     c = b.json()
-    print("Classification Took %s seconds ---" % (sktime - fktime))
+    print("--- Classification Took %s seconds ---" % abs(round(sktime - fktime,2)))
     print("Suggested Records Schedule: " + str(c['label']) )
     
     #pisplay top 3 categories
@@ -110,12 +110,12 @@ if __name__ == "__main__":
     fin.close()
     
     #print total processing time, and size of document
-    print('Total Time Took to Process this Document of %s bit: %i Seconds' % (size, sttime - fktime))
+    print('Total Time Took to Process this Document of %s bit: %i Seconds' % (size, abs(sttime - fktime)))
     
     #print summary
     print("Here's the summary: ")
     print(a['summary'][:400])
 
     #print keywords
-    print("Here are keywords: ")
+    print("Here are some keywords: ")
     print(a['keywords'][:400])
