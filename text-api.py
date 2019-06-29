@@ -78,18 +78,19 @@ if __name__ == "__main__":
     r = tika(files)
     #print (r.content)
     #print(r.status_code) API STATUS
-    print("--- Text Extraction Took %s seconds ---" % abs(round(sttime - fttime,2)))
-    
     #Determine if PDF needs OCRing
     if len(r.text.strip())==0 and (mimetype == 'application/pdf'):
         fin.seek(0) # Move to the beginning of document
         r = xtika(files)
         print("--- Text Extraction with OCR Took %s seconds ---" % abs(round(sttime - fttime,2)))
+        else:
+        print("--- Text Extraction Took %s seconds ---" % abs(round(sttime - fttime,2)))
     #print(r.text)
     
     # or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     if len(r.text.strip())==0:
         quit()
+        
     t = nlpbuddy(r.text)
     print("--- Text Summarization Took %s seconds ---" % abs(round(snltime - fnltime,2)))
    
