@@ -88,7 +88,8 @@ if __name__ == "__main__":
     print (mimetype)
 
     r = tika(files)
-    
+    #print (r.content)
+    print(r.status_code)
     print("Tika Took %s seconds ---" % (sttime - fttime))
     
     #Determine if PDF needs OCRing
@@ -97,6 +98,7 @@ if __name__ == "__main__":
         r = xtika(files)
         print("Tika OCR Took %s seconds ---" % (sttime - fttime))
     #print(r.text)
+    
     if len(r.text.strip())==0 or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'):
         quit()
     t = nlpbuddy(r.text)
