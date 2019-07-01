@@ -13,6 +13,8 @@ fktime = "global"
 
 mimetype = ""
 
+dict = {'301-093_1016_c' : "Routine controls and oversight records", '306-112_1023_c' : "Nonfinal rulemakings and state standards records"}
+
 def tika(files):
     global sttime
     global fttime
@@ -96,9 +98,12 @@ if __name__ == "__main__":
     a = t.json()    
     b = klassify(a['summary'])
     c = b.json()
+    slabel = str(c['label'])
     print("--- ML Text Classification Took %s seconds ---" % abs(round(sktime - fktime,2)))
-    print("Suggested Records Schedule: " + str(c['label']) )
-    
+    for key, value in dict.items():
+        if slabel == key:
+            print("Suggested Records Schedule: " + slabel + " - " + value)  
+            
     #pisplay top 3 categories
     from collections import Counter
     d = Counter(c['scores'])
