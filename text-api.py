@@ -108,8 +108,12 @@ if __name__ == "__main__":
     from collections import Counter
     d = Counter(c['scores'])
     print('Recommended Top 3 Labels')
-    for k,v in d.most_common(3):
-        print('%s: Score %i' % (k,v))
+    for label, score  in d.most_common(3):
+        print('%s: Score %i' % (label,score))
+        for key1, value1 in dict.items():
+            if label == key1:
+                print(key1 + " - " + value1 + ": " + score)
+                print('%s - %s: %i' % (key1, value1, score))
     
     size = fin.seek(0,2)
     fin.close()
