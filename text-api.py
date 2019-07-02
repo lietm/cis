@@ -28,10 +28,10 @@ def tika(files):
 def xtika(files):
     global sotime
     global fotime
-    url = 'https://ecms-cis-tika.edap-cluster.com/tika'
+    url = 'https://ecms-cis-tika.edap-cluster.com/tika/form'
     headers1 = {'Content-Type' : 'application/pdf', 'X-Tika-PDFOcrStrategy': 'ocr_only', 'Cache-Control': 'no-cache'}
     sotime = time.time()
-    r = requests.put(url, files=files, headers = headers1)
+    r = requests.post(url, files=files, headers = headers1)
     fotime = time.time()
     return r
 
