@@ -13,7 +13,34 @@ fktime = "global"
 
 mimetype = ""
 
-dict = {'301-093_1016_c' : "Routine controls and oversight records", '306-112_1023_c' : "Nonfinal rulemakings and state standards records"}
+dict = {'104-008-02_1035_d' : "Short-term environmental program and project records",
+        '108-025_1036_a' : "Historically significant site-specific records (See Guidance for explanation.)",
+        '108-025-01-01_1044_d' : "Short-term compliance and enforcement records",
+        '108-025-08_1044_b' : "Long-term compliance and enforcement records",
+        '108-028_1036_c' : "Long-term site-specific records",
+        '204-079_1047_c' : "Routine permits",
+        '205_1003_a' : "Waste water construction and state revolving fund grants",
+        '205_1003_b' : "Other grants and program support agreements",
+        '301-093_1016_c' : "Routine controls and oversight records",
+        '301-093_1051_b' : "Routine senior officials records",
+        '302-095_1008_c' : "Other security records",
+        '304-104-02_1021_a' : "Historically significant planning and resource allocation records",
+        '304-104-06_1035_c' : "Routine environmental program and project records",
+        '305-109-02-04_1022_a' : "Historically significant public affairs records",
+        '305-109-02-04_1051_a' : "Historically significant records of senior officials",
+        '306-112_1023_c' : "Nonfinal rulemakings and state standards records",
+        '317-261_1025_b' : "Other legal services records",
+        '401_1006_b' : "Other administrative management records",
+        '401-122_1010_a' : "Travel records",
+        'Encrypted' : None,
+        '304-107_1021_a' : "Historically significant planning and resource allocation records",
+        '108-205-03_1035_c' : "Routine environmental program and project records",
+        '108-025-08_1044_d' : "Short-term compliance and enforcement records",
+        '301-091_1016_c' : "Routine controls and oversight records",
+        '301-093_1006_b' : "Other administrative management records",
+        '306-114_1023_c' : "Nonfinal rulemakings and state standards records",
+        '317-260_1025_b' : "Other legal services records"
+        }
 
 def tika(files):
     global sttime
@@ -99,17 +126,18 @@ if __name__ == "__main__":
     b = klassify(a['summary'])
     c = b.json()
     slabel = str(c['label'])
-    print("--- ML Text Classification Took %s seconds ---" % abs(round(sktime - fktime,2)))
     for key, value in dict.items():
         if slabel == key:
-            print("Suggested Records Schedule: " + slabel + " - " + value)  
-            
-    #pisplay top 3 categories
+            print("Suggested Records Schedule: %s - %s" % (key,value))  
+      
+    #display top 3 categories
     from collections import Counter
     d = Counter(c['scores'])
     print('Recommended Top 3 Labels')
     for k,v in d.most_common(3):
-        print('%s: Score %i' % (k,v))
+        for label, desc in dict.items():
+            if label == k:
+                print('%s - %s: %i' % (label, desc, v))          
     
     size = fin.seek(0,2)
     fin.close()
