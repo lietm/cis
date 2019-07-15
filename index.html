@@ -154,7 +154,7 @@ var recordinfo = new Bloodhound({
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   remote: {
     wildcard: '%QUERY',
-    url: 'https://developer.epa.gov/api/api.php/records/api_records?api=records&filter1=Description,cs,%QUERY&filter2=Record_Schedule_Number,cs,%QUERY&filter3=Schedule_Title,cs,%QUERY&size=10',
+    url: 'https://developer.epa.gov/api/index.php/records/api_records?filter1=Description,cs,%QUERY&filter2=Record_Schedule_Number,cs,%QUERY&size=10&filter3=Schedule_Title,cs,%QUERY',
     replace: function (url, query) {
         return url.replace(new RegExp('%QUERY', 'g'), query);
             },
