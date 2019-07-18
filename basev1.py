@@ -1,4 +1,4 @@
-from Services import *
+from services import *
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -94,34 +94,42 @@ class Base(tk.Frame):
 		#bind function to click
 		self.upload_button.bind('<Button-1>', self.update_text)
 		
+		#bind resizing, might not need
+		self.master.bind('<Configure>', self.update_mess)
 		#self.info_box.bind('<Button-1>', self.speak)
 		
 	def update_text(self, event):
-		self.filename =  filedialog.askopenfilename(parent=root,initialdir="/",title='Please select a file to scan')
+		self.filename =  filedialog.askopenfilename(parent=root,initialdir="/home/liet/Desktop",title='Please select a file to scan')
 		
 		#run voice command here
 		self.fin = open(self.filename, 'rb')
 		self.files = {'files':self.fin}
-		self.mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
-		e0,t0 = tika(self.files)
 
-# or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+		self.mimetype = mimetypes.MimeTypes().guess_type(self.filename)[0]
+		self.summary_message.config(text=self.mimetype)
+
+	
+		e0,t0 = tika(self.files)
+		
+		# or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 		
 		eseconds = abs(round(t0,2))
 		self.information = 'Text Extraction Took ' + str(eseconds) + ' seconds' + '\n'
 		
-		if len(r.text.strip())==0 and (mimetype == 'application/pdf'):
+		if len(e0.text.strip()) == 0 and self.mimetype =='application/pdf':
 			self.fin.seek(0)
-        		self.files = {'files':self.fin}
+			self.files = {'files':self.fin}
 			e0,t0 = xtika(self.files)
 			eseconds = abs(round(t0,2))
 			self.information = 'Text Extraction with OCR Took ' + str(eseconds) + ' seconds' + '\n'
-		
+
 		#run voice command here 
 		#if len(r.text.strip())==0: quit()
-		
+
 		e1,t1 = nlpbuddy(e0.text)
+		#test function self.summary_message.config(text='')
 		
+		#tested up to here ----------------------------------
 		#run voice command here
     		e2,t2 = klassify(e1.json()['summary'])
 		
@@ -156,14 +164,14 @@ class Base(tk.Frame):
 		self.info_message.config(text=self.information)
 
 
-'''	
+
 	#update the message box sizze
 	def update_mess(self,event):
 		self.info_message.config(width=self.master.winfo_width())
 		self.summary_message.config(width=self.master.winfo_width())
 		self.keywords_message.config(width=self.master.winfo_width())
 		#self.master.update()
-'''
+
 		
 
 if __name__ == "__main__":
