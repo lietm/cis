@@ -1,12 +1,12 @@
 from Services import *
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
+from collections import Counter
+import mimetypes
 
 class Base(tk.Frame):
-	from tkinter import filedialog
-	import mimetypes
-	from collections import Counter
-
+	
 	dict = {
 	'104-008-02_1035_d' : "Short-term environmental program and project records",
         '108-025_1036_a' : "Historically significant site-specific records (See Guidance for explanation.)",
@@ -104,20 +104,21 @@ class Base(tk.Frame):
 		self.files = {'files':self.fin}
 		self.mimetype = mimetypes.MimeTypes().guess_type(root.filename)[0]
 		e0,t0 = tika(self.files)
-		# or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+# or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 		
 		eseconds = abs(round(t0,2))
 		self.information = 'Text Extraction Took ' + str(eseconds) + ' seconds' + '\n'
-
+		
 		if len(r.text.strip())==0 and (mimetype == 'application/pdf'):
-			self.fin.seek(0) # Move to the beginning of document
-        		e0,t0 = xtika(files)
+			self.fin.seek(0)
+        		self.files = {'files':self.fin}
+			e0,t0 = xtika(self.files)
 			eseconds = abs(round(t0,2))
 			self.information = 'Text Extraction with OCR Took ' + str(eseconds) + ' seconds' + '\n'
 		
 		#run voice command here 
-		#if len(r.text.strip())==0:
-        		#quit()
+		#if len(r.text.strip())==0: quit()
 		
 		e1,t1 = nlpbuddy(e0.text)
 		
@@ -140,9 +141,10 @@ class Base(tk.Frame):
 		
 		sseconds = abs(round(t1,2))
 		cseconds = abs(round(t2,2))
+
 		self.information += 'Document Summarization Took ' + str(cseconds) + ' seconds' + '\n'
 		self.information += 'Classification Took ' + str(cseconds) + ' seconds' + '\n'
-		self.information += 'Total Time took str(abs(round(t0+t1+t2,2)))
+		self.information += 'Total Time took to process of ' + str(size) + ' bits: ' + str(abs(round(t0+t1+t2,2))) + ' seconds'
 		#run voice command here
 
 		self.summary = e1.json()['summary']
