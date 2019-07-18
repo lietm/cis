@@ -1,7 +1,8 @@
 import requests
 import time
 import mimetypes
-
+import json
+    
 sttime = "global"
 fttime = "global"
 sotime = "global"
@@ -59,7 +60,6 @@ def getLabel(label):
     y = x.replace('_','')
     url = 'https://developer.epa.gov/api/index.php/records/api_records?filter=Record_Schedule_Number,cs,' + y
     r = requests.get(url)
-    import json
     q = r.json()
     return q['records'][0]['Schedule_Title']
 
@@ -67,7 +67,6 @@ if __name__ == "__main__":
     
     from tkinter import filedialog
     from tkinter import *
-    import json
     #from tkinter import messagebox
     #messagebox.showinfo("Title", "a Tk MessageBox")
 
