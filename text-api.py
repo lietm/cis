@@ -108,10 +108,10 @@ if __name__ == "__main__":
     print("--- ML Text Classification Took {} seconds ---".format(abs(round(sktime - fktime,2))))
     print("Suggested Records Schedule: " + str(c['label']) + " - " + getLabel(str(c['label'])))
     
-    #pisplay top 3 categories
+    #Display top 3 categories
     from collections import Counter
     d = Counter(c['scores'])
-    print('Recommended Top 3 Labels')
+    print('Recommended Top 3 Record Schedules')
     for k,v in d.most_common(3):
         print('{} - {}: Score {}'.format(k,getLabel(k),v))
     
