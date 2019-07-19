@@ -10,45 +10,45 @@ import requests
 import time
 
 def tika(files):
-    url = 'https://ecms-cis-tika.edap-cluster.com/tika/form'
-    headers = {'Cache-Control': 'no-cache'}
-    s = time.time()
-    r = requests.post(url, files=files, headers = headers)
-    f = time.time()
-    return(r, f-s)
+	url = 'https://ecms-cis-tika.edap-cluster.com/tika/form'
+	headers = {'Cache-Control': 'no-cache'}
+	s = time.time()
+	r = requests.post(url, files=files, headers = headers)
+	f = time.time()
+	return(r, f-s)
 
 def xtika(files):
-    url = 'https://ecms-cis-tika.edap-cluster.com/tika'
-    headers = {'Content-Type' : 'application/pdf', 'X-Tika-PDFOcrStrategy': 'ocr_only', 'Cache-Control': 'no-cache'}
-    s = time.time()
-    r = requests.put(url, files=files, headers = headers) #post
-    f = time.time()
-    return(r, f-s)
+	url = 'https://ecms-cis-tika.edap-cluster.com/tika'
+	headers = {'Content-Type' : 'application/pdf', 'X-Tika-PDFOcrStrategy': 'ocr_only', 'Cache-Control': 'no-cache'}
+	s = time.time()
+	r = requests.put(url, files=files, headers = headers) #post
+	f = time.time()
+	return(r, f-s)
 
 def nlpbuddy(text):
-    url = 'https://ecms-cis-nlpbuddy.edap-cluster.com/api/analyze'
-    #headers = {'Content-Type' : 'application/json'}
-    data = {'text': text}
-    s = time.time()
-    r = requests.post(url, json=data)
-    f = time.time()
-    return(r, f-s)
+	url = 'https://ecms-cis-nlpbuddy.edap-cluster.com/api/analyze'
+	#headers = {'Content-Type' : 'application/json'}
+	data = {'text': text}
+	s = time.time()
+	r = requests.post(url, json=data)
+	f = time.time()
+	return(r, f-s)
 
 def klassify(text):
-    url = 'https://ecms-cis-klassify.edap-cluster.com/classify'
-    data = {'text': text}
-    s = time.time()
-    r = requests.post(url, json=data)
-    f = time.time()
-    return(r, f-s)
+	url = 'https://ecms-cis-klassify.edap-cluster.com/classify'
+	data = {'text': text}
+	s = time.time()
+	r = requests.post(url, json=data)
+	f = time.time()
+	return(r, f-s)
 
 def getLabel(label):
-    x = label[label.index('_')+1:label.index('_')+5]
-    y = x.replace('_','')
-    url = 'https://developer.epa.gov/api/index.php/records/api_records?filter=Record_Schedule_Number,cs,' + y
-    r = requests.get(url)
-    q = r.json()
-    return q['records'][0]['Schedule_Title']
+	x = label[label.index('_')+1:label.index('_')+5]
+	y = x.replace('_','')
+	url = 'https://developer.epa.gov/api/index.php/records/api_records?filter=Record_Schedule_Number,cs,' + y
+	r = requests.get(url)
+	q = r.json()
+	return q['records'][0]['Schedule_Title']
 
 class Base(tk.Frame):
 	
@@ -61,14 +61,14 @@ class Base(tk.Frame):
 		self.master.config(bg='black')
 		self.filename = ''
 		self.schedule_list = ['','','']
-		self.summary = 'Hello How are You'
+		self.summary = ''
 		self.keywords = ''
 		self.information = '' 
 		self.fin = bin
 		self.files = {}
 		self.recordlabel = ''
 
-		#main containers
+		#main frames
 		self.top_box = tk.Frame(self.master, bd=1, bg='black')
 		self.summary_box = tk.LabelFrame(self.master, text='Summary', padx=5, pady=5, bg='black', fg='white')
 		self.keywords_box = tk.LabelFrame(self.master, text='Keywords', padx=5, pady=5, bg='black', fg='white')
@@ -93,27 +93,32 @@ class Base(tk.Frame):
 		self.schedule_box = ttk.Combobox(self.top_box, width=50, values=self.schedule_list, state='readonly')
 		self.schedule_box.grid(row=1, column=1)
 
-		self.validate_button = tk.Button(self.top_box, text="Validate", command=self.goodbye, bg='plum')
+		self.validate_button = tk.Button(self.top_box, text="Validate", command=self.goodbye, bg='DarkOrchid4', fg='white')
 		self.validate_button.grid(row=0, column=2)
 
-		#text display for summary, keywords, info
+		#text displays for summary, keywords, info
 		self.summary_message = tk.Message(self.summary_box, text=self.summary, anchor='w', justify='left', bg='black', fg='white')
 		self.keywords_message = tk.Message(self.keywords_box, text=self.keywords, anchor='w', justify='left', bg='black', fg='white')
 		self.info_message = tk.Message(self.info_box, text=self.information, anchor='w', justify='left', bg='black', fg='white')
 
-		self.summary_message.pack(fill='both')
-		self.keywords_message.pack(fill='both')
-		self.info_message.pack(fill='both')
+		self.summary_message.pack(fill='both', side='left')
+		self.keywords_message.pack(fill='both', side='left')
+		self.info_message.pack(fill='both', side='left')
 		
 		#bind function to click
 		self.upload_button.bind('<Button-1>', self.update_text)
 		
 		#bind resizing, might not need
 		self.master.bind('<Configure>', self.update_mess)
-		#self.info_box.bind('<Button-1>', self.speak)
-		self.summary_message.bind('<Button-1>', lambda event: self.talk(self.summary))
-		self.keywords_message.bind('<Button-1>', lambda event: self.talk(self.keywords))
-		self.info_message.bind('<Button-1>', lambda event: self.talk(self.information))
+		self.info_talk = tk.Button(self.info_box, text='Information', command= lambda: self.talk(self.information))
+		self.summary_talk = tk.Button(self.summary_box, text='Summary', command= lambda: self.talk(self.summary))
+		self.keywords_talk = tk.Button(self.keywords_box, text='Keywords', command= lambda: self.talk(self.keywords))
+		self.summary_talk.pack(side='right')
+		self.keywords_talk.pack(side='right')
+		self.info_talk.pack(side='right')                                              
+		#self.summary_message.bind('<Button-1>', lambda event: self.talk(self.summary))
+		#self.keywords_message.bind('<Button-1>', lambda event: self.talk(self.keywords))
+		#self.info_message.bind('<Button-1>', lambda event: self.talk(self.information))
 		
 		from win32com.client import Dispatch
 		self.voice = Dispatch("SAPI.SpVoice")
@@ -136,7 +141,7 @@ class Base(tk.Frame):
 		self.keywords_message.config(width=self.master.winfo_width())
 		#self.master.update()                
 
-	      
+		  
 	def update_text(self, event):
 		self.filename =  filedialog.askopenfilename(parent=root,initialdir="C:/Users/mnguyen/Desktop",title='Please select a file to scan')
 		
@@ -151,6 +156,7 @@ class Base(tk.Frame):
 		e0,t0 = tika(self.files)
 		
 		# or (mimetype == 'application/vnd.ms-excel') or (mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+		# possible to just use tika to detect mimetype
 		
 		eseconds = abs(round(t0,2))
 		self.information = 'Text Extraction Took ' + str(eseconds) + ' seconds' + '\n'
@@ -162,14 +168,11 @@ class Base(tk.Frame):
 			eseconds = abs(round(t0,2))
 			self.information = 'Text Extraction with OCR Took ' + str(eseconds) + ' seconds' + '\n'
 
-		#run voice command here 
-		#if len(r.text.strip())==0: quit()
 
 		(e1,t1) = nlpbuddy(e0.text)
 		a = e1.json()['summary']
 		(e2,t2) = klassify(a)
 		
-		#run voice command here
 		d = Counter(e2.json()['scores'])
 		self.schedule_list.clear()
 
@@ -181,15 +184,12 @@ class Base(tk.Frame):
 		self.schedule_box.config(value = self.schedule_list)
 		self.schedule_box.current(0)
 
-		#run voice command here
-
 		sseconds = abs(round(t1,2))
 		cseconds = abs(round(t2,2))
 
 		self.information += 'Document Summarization Took ' + str(sseconds) + ' seconds' + '\n'
 		self.information += 'Classification Took ' + str(cseconds) + ' seconds' + '\n'
 		self.information += 'Total Time took to process of ' + str(size) + ' bits: ' + str(abs(round(t0+t1+t2,2))) + ' seconds'
-		#run voice command here
 
 		self.summary = e1.json()['summary']
 		self.keywords = e1.json()['keywords']
